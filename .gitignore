@@ -1,0 +1,11 @@
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.env
+*.json
+!examples/*.json
+!sample_input/*.json
+dist/
+build/
+*.egg-info/
