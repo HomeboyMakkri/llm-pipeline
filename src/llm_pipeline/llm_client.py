@@ -2,10 +2,11 @@ import os
 
 from dotenv import load_dotenv
 from openai import OpenAI
+from openai.types.chat import ChatCompletionMessageParam
 
 
-def get_response(prompt: str) -> str:
-    """Отправить готовый промпт модели и вернуть текст ответа."""
+def get_response(messages: list[ChatCompletionMessageParam]) -> str:
+    """Отправить готовые сообщения модели и вернуть текст ответа."""
     load_dotenv()
     with OpenAI(
         api_key=os.environ["DEEPSEEK_API_KEY"],
@@ -13,7 +14,7 @@ def get_response(prompt: str) -> str:
     ) as client:
         response = client.chat.completions.create(
             model=os.environ["LLM_MODEL"],
-            messages=[{"role": "user", "content": prompt}],
+            messages=messages,
         )
     content = response.choices[0].message.content
     if content is None:

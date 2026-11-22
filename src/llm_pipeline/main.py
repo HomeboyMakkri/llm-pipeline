@@ -1,13 +1,13 @@
 import sys
 
 from .llm_client import get_response
-from .prompts import build_prompt
+from .prompts import build_messages
 
 
 def main() -> None:
     text = sys.stdin.read()
-    prompt = build_prompt(text)
-    response = get_response(prompt)
+    messages = build_messages(text)
+    response = get_response(messages)
     print(response)
 
 
