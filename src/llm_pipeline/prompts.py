@@ -23,6 +23,21 @@ USER_PROMPT_TEMPLATE = (
     "Исходный текст:\n{text}"
 )
 
+CLASSIFICATION_SYSTEM_PROMPT = SYSTEM_PROMPT + (
+    "\n\nОпредели категорию запроса и кратко опиши, чего хочет автор.\n"
+    "- support: помощь с проблемой или настройкой.\n"
+    "- feedback: отзыв или предложение без требования исправить конкретную ситуацию.\n"
+    "- complaint: претензия с ожиданием исправления или компенсации.\n"
+    "- sales: интерес к покупке, ценам или условиям.\n"
+    "- general_question: остальные вопросы и тексты без явного запроса.\n"
+    "Если в тексте несколько целей, выбирай категорию по главной цели автора, "
+    "а не по тональности. Если запроса нет, укажи это в intent, не приписывая "
+    "автору цель.\n\n"
+    "Верни ровно один JSON-объект с двумя строковыми полями category и intent, "
+    "без Markdown-обёртки и пояснений до или после объекта. Пример:\n"
+    '{"category": "support", "intent": "Узнать, как сбросить пароль"}'
+)
+
 
 def build_prompt(text: str) -> str:
     """Сформировать инструкцию для обработки текста моделью."""
@@ -34,4 +49,12 @@ def build_messages(text: str) -> list[ChatCompletionMessageParam]:
     return [
         {"role": "system", "content": SYSTEM_PROMPT},
         {"role": "user", "content": build_prompt(text)},
+    ]
+
+
+def build_classification_messages(text: str) -> list[ChatCompletionMessageParam]:
+    """Сформировать сообщения для классификации, не изменяя исходный текст."""
+    return [
+        {"role": "system", "content": CLASSIFICATION_SYSTEM_PROMPT},
+        {"role": "user", "content": text},
     ]
